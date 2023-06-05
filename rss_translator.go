@@ -82,6 +82,8 @@ func Run(c *cli.Context) error {
 
 	// 创建path与content对应的map
 	pathContentMap := make(map[string]string)
+	// 创建path与contentType对应的map
+	pathContentTypeMap := make(map[string]string)
 
 	// 创建定时任务
 	crontab := cron.New()
@@ -97,6 +99,8 @@ func Run(c *cli.Context) error {
 			if err != nil {
 				log.Fatal(err)
 			}
+			defer resp.Body.Close()
+			pathContentTypeMap[path] = resp.Header.Get("Content-Type")
 
 			doc := etree.NewDocument()
 			_, err = doc.ReadFrom(resp.Body)
@@ -139,7 +143,7 @@ func Run(c *cli.Context) error {
 			p = "/" + p
 		}
 		r.GET(p, func(c *gin.Context) {
-			c.Header("Content-Type", "application/xml; charset=utf-8")
+			c.Header("Content-Type", pathContentTypeMap[p])
 			c.String(http.StatusOK, pathContentMap[p])
 		})
 	}
