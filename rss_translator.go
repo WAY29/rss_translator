@@ -63,10 +63,9 @@ func Init(c *cli.Context) error {
 
 func Run(c *cli.Context) error {
 	var (
-		title        *etree.Element
-		text, result string
-		err          error
+		err error
 	)
+
 	configContentBytes, err := ioutil.ReadFile("./config.json")
 	if err != nil {
 		log.Fatal(err)
@@ -89,8 +88,8 @@ func Run(c *cli.Context) error {
 	crontab := cron.New(cron.WithSeconds())
 	fmt.Printf("[Info] refresh crontab: %s\n", interval)
 	for _, r := range rss {
-		r := r
 		fun := func() {
+			r := r
 			url := r.Get("url").String()
 			path := r.Get("path").String()
 			now := time.Now().Format("2006-01-02 15:04:05")
@@ -109,13 +108,13 @@ func Run(c *cli.Context) error {
 			}
 
 			for _, item := range doc.FindElements(r.Get("xml_item_path").String()) {
-				title = item.SelectElement(r.Get("xml_title_in_item_path").String())
-				text = title.Text()
-				result, err = Translate(text, language)
+				title := item.SelectElement(r.Get("xml_title_in_item_path").String())
+				text := title.Text()
+				result, err := Translate(text, language)
 				if err != nil {
 					continue
 				}
-				title.SetCData(fmt.Sprintf("%s: %s", result, text))
+				title.SetCData(fmt.Sprintf("%s\n%s", result, text))
 			}
 			doc.Indent(2)
 			content, err := doc.WriteToString()
