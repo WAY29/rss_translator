@@ -139,6 +139,7 @@ func Run(c *cli.Context) error {
 			p = "/" + p
 		}
 		r.GET(p, func(c *gin.Context) {
+			c.Header("Content-Type", "application/xml; charset=utf-8")
 			c.String(http.StatusOK, pathContentMap[p])
 		})
 	}
