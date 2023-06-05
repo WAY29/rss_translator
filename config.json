@@ -1,0 +1,20 @@
+{
+    "host": "0.0.0.0",
+    "port": "8855",
+    "language": "zh",
+    "cron": "@hourly",
+    "rss": [
+        {
+            "url": "https://hnrss.org/newest?points=100&comments=25",
+            "path": "/hacker_news_newest",
+            "xml_item_path": "/rss/channel/item",
+            "xml_title_in_item_path": "title"
+        },
+        {
+            "url": "https://hnrss.org/show?points=100&comments=25",
+            "path": "/hacker_news_show",
+            "xml_item_path": "/rss/channel/item",
+            "xml_title_in_item_path": "title"
+        }
+    ]
+}
