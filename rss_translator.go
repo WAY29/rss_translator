@@ -86,7 +86,7 @@ func Run(c *cli.Context) error {
 	pathContentTypeMap := make(map[string]string)
 
 	// 创建定时任务
-	crontab := cron.New()
+	crontab := cron.New(cron.WithSeconds())
 	fmt.Printf("[Info] refresh crontab: %s\n", interval)
 	for _, r := range rss {
 		r := r
@@ -128,8 +128,9 @@ func Run(c *cli.Context) error {
 		fun()
 
 		crontab.AddFunc(interval, fun)
-
 	}
+	crontab.Start()
+	defer crontab.Stop()
 
 	gin.SetMode(gin.ReleaseMode)
 	// 设置gin路由
