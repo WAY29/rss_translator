@@ -87,7 +87,7 @@ func Run(c *cli.Context) error {
 	crontab := cron.New()
 	fmt.Printf("[Info] refresh crontab: %s\n", interval)
 	for _, r := range rss {
-
+		r := r
 		fun := func() {
 			url := r.Get("url").String()
 			path := r.Get("path").String()
@@ -139,7 +139,7 @@ func Run(c *cli.Context) error {
 			p = "/" + p
 		}
 		r.GET(p, func(c *gin.Context) {
-			c.String(http.StatusOK, pathContentMap[path])
+			c.String(http.StatusOK, pathContentMap[p])
 		})
 	}
 
