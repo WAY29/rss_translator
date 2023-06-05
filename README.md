@@ -4,7 +4,7 @@ RSS Translator 是一个将指定的 RSS 订阅信息中的文章标题进行翻
 
 ## 项目部署
 
-1. 克隆本仓库或者下载 [release 版本](https://github.com/xxx/RSS-Translator/releases)
+1. 克隆本仓库
 2. 使用 `go build -ldflags "-w -s" rss_translator.go` 命令编译二进制文件
 3. 在项目目录下通过 `init` 命令初始化配置文件：`./RSS-Translator init`
 4. 修改 `./config.json` 配置文件中的相关配置项：
