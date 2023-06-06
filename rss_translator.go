@@ -114,7 +114,7 @@ func Run(c *cli.Context) error {
 				if err != nil {
 					continue
 				}
-				title.SetCData(fmt.Sprintf("%s\n%s", result, text))
+				title.SetCData(fmt.Sprintf("%s<br/>%s", result, text))
 			}
 			doc.Indent(2)
 			content, err := doc.WriteToString()
