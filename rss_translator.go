@@ -83,15 +83,18 @@ func Run(c *cli.Context) error {
 	pathContentMap := make(map[string]string)
 	// 创建path与contentType对应的map
 	pathContentTypeMap := make(map[string]string)
+	// 创建path与fun对应的map
+	pathFunMap := make(map[string]func())
 
 	// 创建定时任务
 	crontab := cron.New(cron.WithSeconds())
 	fmt.Printf("[Info] refresh crontab: %s\n", interval)
 	for _, r := range rss {
+		url := r.Get("url").String()
+		path := r.Get("path").String()
+
 		fun := func() {
 			r := r
-			url := r.Get("url").String()
-			path := r.Get("path").String()
 			now := time.Now().Format("2006-01-02 15:04:05")
 			fmt.Printf("[%s] [Info] %s: refresh %s\n", now, path, url)
 			resp, err := http.Get(url)
@@ -123,11 +126,16 @@ func Run(c *cli.Context) error {
 			}
 			pathContentMap[path] = content
 		}
+		pathFunMap[r.Get("path").String()] = fun
 		// 立即执行一次
 		fun()
 
-		crontab.AddFunc(interval, fun)
 	}
+	crontab.AddFunc(interval, func() {
+		for _, fun := range pathFunMap {
+			fun()
+		}
+	})
 	crontab.Start()
 	defer crontab.Stop()
 
